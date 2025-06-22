@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS BUATQRIS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .profile-img {
+      width: 100px;
+      border-radius: 50%;
+    }
+    .cs-info {
+      font-size: 16px;
+      margin: 10px 0 20px;
+      line-height: 1.4;
+    }
+    .contact-button {
+      display: block;
+      width: 90%;
+      margin: 10px auto;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+    }
+    .whatsapp { background: #25D366; }
+    .telegram { background: #0088cc; }
+    .screenshot {
+      width: 100%;
+      border-radius: 6px;
+      margin-top: 15px;
+    }
+    #myInput {
+      width: 90%;
+      padding: 10px;
+      font-size: 14px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    #copyBtn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-weight: bold;
+      background: #4a90e2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #notif, #popup {
+      display: none;
+      margin-top: 10px;
+      background: #ffc107;
+      color: #000;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+/* Spinner full screen overlay */
+  #loadingSpinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+.loading-text {
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  margin-top: 15px;
+  text-align: center;
+}
+
+  /* Spinner animasi */
+  .spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #4a90e2;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+
+  /* iOS overlay */
+    #iosOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 9998;
+    }
+
+    #iosNotice {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #e74c3c;
+      color: white;
+      padding: 24px 28px 20px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      z-index: 9999;
+      max-width: 80%;
+      display: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    #iosNotice.show,
+    #iosOverlay.show {
+      display: block;
+    }
+
+    #iosNotice button {
+      margin-top: 16px;
+      background: #ffffff;
+      color: #e74c3c;
+      font-weight: bold;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 400px) {
+      #iosNotice {
+        max-width: 90%;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <!-- Tambahin di awal <body> -->
+<div id="loadingSpinner">
+  <div class="spinner"></div>
+  <div class="loading-text">Sinyal Anda Tidak Stabil<br>Mohon Tunggu...</div>
+</div>
+  <div class="container">
+    <img src="https://i.ibb.co.com/Ndf7Vfs8/1000388785-2.webp" alt="Profile CS" class="profile-img" loading="lazy">
+    <p class="cs-info"><strong>| CS BUATQRIS |</strong><br>Jika tombol tidak bisa diklik:<br><strong>Buka Halaman di Browser</strong><br>(klik titik tiga kanan atas <strong>⋯</strong> )</p>
+
+    <div id="popup">📢 Jika tombol tidak berfungsi, buka halaman ini di browser. Klik titik tiga kanan atas <strong>⋯</strong><br>"Buka di browser"</div>
+
+    <a href="https://api.whatsapp.com/send/?phone=62895320032046&text=Hallo+kak%2C+mau+order+jasa+pembuatan+QRIS+Allpayment&type=phone_number&app_absent=0" class="contact-button whatsapp" onclick="showNotice()">WhatsApp</a>
+
+    <input type="text" id="myInput" value="62895320032046" readonly>
+    <button id="copyBtn" onclick="salin()">Salin Nomor</button>
+    <div id="notif">Nomor berhasil disalin!</div>
+
+    <a href="https://t.me/buatqrisallpay" class="contact-button telegram" onclick="showNotice()">Channel Telegram</a>
+
+<!-- iOS Overlay & Notice -->
+  <div id="iosOverlay"></div>
+  <div id="iosNotice">
+    Buka halaman ini di browser Safari<br>
+    Klik icon (•••)<br>kanan atas<br>
+    dan pilih<br>"Buka di Browser"<br>atau salin nomor WhatsApp<br>
+    <button onclick="closeIosNotice()">Lanjutkan</button>
+  </div>
+
+    <img src="https://i.ibb.co.com/qFrBNWVC/asdasddasd.webp" alt="Screenshot QRIS" class="screenshot" loading="lazy">
+  </div>
+
+  <script>
+    function salin() {
+    const input = document.getElementById("myInput");
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(input.value).then(() => {
+        showNotifikasi();
+      }).catch(() => {
+        fallbackSalin(input);
+      });
+    } else {
+      fallbackSalin(input);
+    }
+  }
+
+  function fallbackSalin(input) {
+    input.select();
+    input.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    showNotifikasi();
+  }
+
+  function showNotifikasi() {
+    const notif = document.getElementById("notif");
+    notif.style.display = "block";
+    setTimeout(() => {
+      notif.style.display = "none";
+    }, 2000);
+  }
+
+  function showIosNotice() {
+    document.getElementById("iosNotice").classList.add("show");
+    document.getElementById("iosOverlay").classList.add("show");
+  }
+
+  function closeIosNotice() {
+    document.getElementById("iosNotice").classList.remove("show");
+    document.getElementById("iosOverlay").classList.remove("show");
+  }
+
+  function showNotice() {
+    const ua = navigator.userAgent.toLowerCase();
+    const isAndroidWebview = /tiktok|instagram|fbav|fb_iab|wv/.test(ua);
+
+    if (isAndroidWebview) {
+      const popup = document.getElementById("popup");
+      popup.style.display = "block";
+      setTimeout(() => {
+        popup.style.display = "none";
+      }, 4000);
+    }
+  }
+
+  // Spinner hilang setelah semua gambar benar-benar selesai dimuat
+  document.addEventListener('DOMContentLoaded', () => {
+    const images = Array.from(document.images);
+    let loadedImages = 0;
+
+    if (images.length === 0) {
+      hideSpinner();
+    }
+
+    images.forEach(img => {
+      if (img.complete) {
+        loadedImages++;
+        if (loadedImages === images.length) {
+          hideSpinner();
+        }
+      } else {
+        img.addEventListener('load', () => {
+          loadedImages++;
+          if (loadedImages === images.length) {
+            hideSpinner();
+          }
+        });
+        img.addEventListener('error', () => {
+          loadedImages++;
+          if (loadedImages === images.length) {
+            hideSpinner();
+          }
+        });
+      }
+    });
+
+    // Tampilkan notifikasi iOS kalau iOS terdeteksi
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (isIOS) {
+      showIosNotice();
+    }
+  });
+
+  function hideSpinner() {
+    document.getElementById('loadingSpinner').style.display = 'none';
+  }
+  </script>
+</body>
+</html>
